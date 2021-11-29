@@ -65,6 +65,7 @@ def calculate_book_polarity(book_path, output_path, df, normalize=True):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    # to do add argument for different emotion lexicons. 
     parser.add_argument('--input_path', type=str)
     parser.add_argument('--output_path', type=str, default='../data/emotion_data')
     parser.add_argument('--normalize', default = True, type=bool)

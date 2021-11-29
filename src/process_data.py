@@ -8,7 +8,8 @@ import unicodedata
 
 nlp = spacy.load('nl_core_news_sm', disable=['ner', 'tagger', 'parser'])
 nlp.add_pipe('sentencizer')
-nlp.max_length = 1500000
+
+#nlp.max_length = 2000000
 
 def load_files(input_path):
     return glob.glob(os.path.join(input_path, '*.xml'))
@@ -29,12 +30,17 @@ def extract_text(content):
     #raw_text = ' '.join([x.get_text(separator=' ', strip=True) \
     #                    for x in content.find_all('div', {'type': 'chapter'})])
 
-    list_txt = []
+    book_text = [] 
     for chapter in content.find_all('div', {'type': 'chapter'}):
+        chapter_text = []
         for p in chapter.findAll('p'):
-            list_txt.append(p.get_text(separator=' ', strip=True))
-    raw_text = strip_accents(' '.join(list_txt))
-    return raw_text
+            chapter_text.append(p.get_text(separator=' ', strip=True))
+        chapter_raw = ' '.join(chapter_text)
+        doc = nlp(chapter_raw)
+        lemmatized_sentences = [sentence.lemma_ for sentence in doc.sents]
+        chapter_processed = [[strip_accents(word) for word in sentence.split()] for sentence in lemmatized_sentences]
+        book_text.append(chapter_processed)
+    return book_text
 
 def write_output(text, file_, output_path):
     filename = os.path.basename(file_)[:-4] + '.json'
@@ -45,14 +51,14 @@ def write_output(text, file_, output_path):
 
 def prepare_text(file_):
     xml_content = read_xml(file_)
-    raw_text = extract_text(xml_content)
+    book_text = extract_text(xml_content)
 
-    doc = nlp(raw_text)
-    lemmatized_sentences = [sentence.lemma_ for sentence in doc.sents]
+    #doc = nlp(raw_text)
+    #lemmatized_sentences = [sentence.lemma_ for sentence in doc.sents]
 
     # turn this into a nested list of lemmas in sentence in sentences
-    output_text = [[word for word in sentence.split()] for sentence in lemmatized_sentences]
-    return output_text
+    #output_text = [[word for word in sentence.split()] for sentence in lemmatized_sentences]
+    return book_text
 
 def pre_process(input_path, output_path):
     print(input_path)
@@ -60,6 +66,7 @@ def pre_process(input_path, output_path):
 
     for file_ in files_:
         print(file_)
+        # to do: skip if output already exists
         text = prepare_text(file_)
         write_output(text, file_, output_path)
 
