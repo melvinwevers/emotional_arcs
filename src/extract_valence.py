@@ -1,3 +1,4 @@
+from multiprocessing.spawn import prepare
 import pandas as pd
 import json
 import numpy as np
@@ -6,8 +7,8 @@ import os
 import glob
 
 
-def prepare_df():
-    df = pd.read_csv('../data/emotion_lexicons/nrc/NRC_dutch.csv')
+def prepare_lexicon():
+    df = pd.read_csv('./data/emotion_lexicons/nrc/NRC_dutch.csv') # hard coded
     df.drop_duplicates(subset=['Dutch (nl)'], keep='first', inplace=True)
     conditions = [
         (df['Positive'] == 0) & (df['Negative'] == 0),
@@ -40,10 +41,10 @@ def calculate_book_polarity(book_path, output_path, df, normalize=True):
     with open(book_path, 'r') as j:
         contents = json.loads(j.read())
     
-    print(book_path)
+
     d = {}
     for index, chapter in enumerate(contents):
-        print(f'chapter: {index}')
+        #print(f'chapter: {index}')
         valence_chapter = []
         for sentence in chapter:
             if len(sentence) > 0:
@@ -62,23 +63,14 @@ def calculate_book_polarity(book_path, output_path, df, normalize=True):
     #todo: add index for chapter to include vlines
 
 
+def extract_valence(input_path, output_path, normalize=True):
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    # to do add argument for different emotion lexicons. 
-    parser.add_argument('--input_path', type=str)
-    parser.add_argument('--output_path', type=str, default='../data/emotion_data')
-    parser.add_argument('--normalize', default = True, type=bool)
+    print('preparing lexicon')
+    lexicon_df = prepare_lexicon()
 
-    args = parser.parse_args()
-
-    if not os.path.exists(args.output_path):
-        os.makedirs(args.output_path)
-
-    df = prepare_df()
-    print(df)
+    files_ = load_files(input_path)
     
-    files_ = load_files(args.input_path)
-
+    print('calculating valence')
     for file_ in files_:
-        calculate_book_polarity(file_, args.output_path, df, normalize=True)
+        calculate_book_polarity(file_, output_path, lexicon_df, normalize)
+

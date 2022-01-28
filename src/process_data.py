@@ -61,22 +61,9 @@ def prepare_text(file_):
     return book_text
 
 def pre_process(input_path, output_path):
-    print(input_path)
     files_ = load_files(input_path)
 
     for file_ in files_:
-        print(file_)
         # to do: skip if output already exists
         text = prepare_text(file_)
         write_output(text, file_, output_path)
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input_path', type=str)
-    parser.add_argument('--output_path', default = '../data/prepared_data', type=str)
-    args = parser.parse_args()
-
-    if not os.path.exists(args.output_path):
-        os.makedirs(args.output_path)
-    
-    pre_process(args.input_path, args.output_path)
