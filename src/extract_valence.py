@@ -20,7 +20,8 @@ def prepare_lexicon():
     df['valence'] = np.select(conditions, choices)
     return df
 
-def sentence_polarity(sentence, normalize=True):
+
+def sentence_polarity(sentence, df, normalize=True):
     valence = 0
     for word in sentence:
         try:
@@ -48,7 +49,7 @@ def calculate_book_polarity(book_path, output_path, df, normalize=True):
         valence_chapter = []
         for sentence in chapter:
             if len(sentence) > 0:
-                valence_chapter.append(sentence_polarity(sentence, normalize=True))
+                valence_chapter.append(sentence_polarity(sentence, df, normalize=True))
         d[index] = valence_chapter
 
     
@@ -69,7 +70,7 @@ def extract_valence(input_path, output_path, normalize=True):
     lexicon_df = prepare_lexicon()
 
     files_ = load_files(input_path)
-    
+
     print('calculating valence')
     for file_ in files_:
         calculate_book_polarity(file_, output_path, lexicon_df, normalize)

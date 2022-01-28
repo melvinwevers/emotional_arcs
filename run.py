@@ -1,12 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-import sys
 import logging
-import time
-from numpy import extract
-
-import pandas as pd
 
 from src.process_data import pre_process
 from src.extract_valence import extract_valence 
@@ -14,6 +9,12 @@ from src.extract_valence import extract_valence
 
 
 if __name__ == '__main__':
+    '''
+    script for preprocessing books and extracting valence
+    example use: python run.py -i './data/raw/' -o './data/emotion_data' -t './data/tmp'
+    
+    '''
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input_path', help='input folder', required=True)
     parser.add_argument('-o', '--output_path', help='output folder', required=True)
@@ -28,8 +29,9 @@ if __name__ == '__main__':
     logging.info('outputfolder: ' + args.output_path)
 
     print('preprocessing')
-    pre_process(args.input_path, args.temp)
-    extract_valence(args.temp, args.output_path, args.normalize)
+    pre_process(args.input_path, args.temp) #output here is temp folder
+    extract_valence(args.temp, args.output_path, args.normalize) #input here is temp folder
+    
 
 
 

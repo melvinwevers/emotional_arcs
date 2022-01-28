@@ -44,7 +44,7 @@ def extract_text(content):
 
 def write_output(text, file_, output_path):
     filename = os.path.basename(file_)[:-4] + '.json'
-    print(filename)
+    #print(filename)
 
     with open(os.path.join(output_path, filename), "w") as jsonfile:
         json.dump(text, jsonfile)
@@ -63,7 +63,7 @@ def prepare_text(file_):
 def pre_process(input_path, output_path):
     files_ = load_files(input_path)
 
-    for file_ in files_:
+    for file_ in files_[:2]:
         # to do: skip if output already exists
         text = prepare_text(file_)
         write_output(text, file_, output_path)
