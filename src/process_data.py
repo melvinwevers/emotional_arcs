@@ -63,7 +63,7 @@ def prepare_text(file_):
 def pre_process(input_path, output_path):
     files_ = load_files(input_path)
 
-    for file_ in files_[:2]:
+    for file_ in files_:
         # to do: skip if output already exists
         text = prepare_text(file_)
         write_output(text, file_, output_path)
