@@ -11,7 +11,7 @@ from itertools import chain
 # print('downloading spacy model')
 # os.system("curl -0L https://github.com/explosion/spacy-models/releases/download/nl_core_news_sm-3.2.0/nl_core_news_sm-3.2.0.tar.gz | tar -xz")
 
-nlp = spacy.load('nl_core_news_sm-3.2.0/nl_core_news_sm/nl_core_news_sm-3.2.0', disable=['ner', 'tagger', 'parser'])
+nlp = spacy.load('nl_core_news_sm', disable=['ner', 'tagger', 'parser'])
 
 nlp.add_pipe('sentencizer')
 
@@ -81,8 +81,8 @@ def prepare_text(file_):
 
 def pre_process(input_path, output_path):
     files_ = load_files(input_path)
-
-    for file_ in files_[:2]:
+    print(f'there are {len(files_)} files')
+    for file_ in files_:
         # to do: skip if output already exists
         text = prepare_text(file_)
         write_output(text, file_, output_path)
