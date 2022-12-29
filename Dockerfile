@@ -16,4 +16,4 @@ LABEL org.opencontainers.image.source = "https://github.com/melvinwevers/emotion
 COPY --from=build /opt/venv /opt/venv
 COPY . /app
 ENV PATH="/opt/venv/bin:$PATH"
-CMD ["python3", "/app/script.py"]
+ENTRYPOINT ["python3", "/app/script.py"]
