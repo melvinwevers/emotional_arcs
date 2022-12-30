@@ -17,3 +17,4 @@ COPY --from=build /opt/venv /opt/venv
 COPY . /app
 ENV PATH="/opt/venv/bin:$PATH"
 ENTRYPOINT ["python3", "/app/script.py"]
+CMD ["-i", "/input", "-o", "/output", "-t", "/tmp"]
